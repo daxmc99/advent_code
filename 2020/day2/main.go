@@ -29,12 +29,19 @@ func main() {
 	data := strings.Split(input, "\n")
 
 	numValidConfigs := 0
+	numValidTobogganConfigs := 0
 	for _, d := range data {
-		if marshalConfig(d).validate() {
+		conf := marshalConfig(d)
+		if conf.validateSledRental() {
 			numValidConfigs++
 		}
+		fmt.Println("The number of valid configs are: ", numValidConfigs)
+		if conf.validateTobogganRental() {
+			numValidTobogganConfigs++
+		}
 	}
-	fmt.Println("The number of valid configs are: ", numValidConfigs)
+
+	fmt.Println("The number of valid toboggan configs: ", numValidTobogganConfigs)
 }
 
 func marshalConfig(c string) pwConfig {
@@ -48,10 +55,33 @@ func marshalConfig(c string) pwConfig {
 	return config
 }
 
-func (c pwConfig) validate() bool {
+func (c pwConfig) validateSledRental() bool {
 	n := strings.Count(c.pw, c.req)
 	if n >= c.min && n <= c.max {
 		return true
 	}
+	return false
+}
+
+/*
+Given the same example list from above:
+
+1-3 a: abcde is valid: position 1 contains a and position 3 does not.
+1-3 b: cdefg is invalid: neither position 1 nor position 3 contains b.
+2-9 c: ccccccccc is invalid: both position 2 and position 9 contain c.
+
+*/
+
+func (c pwConfig) validateTobogganRental() bool {
+	// given indexes assume non-zero first index
+	// ie, a given index of "1" would index to position 0
+	firstPos := c.pw[c.min-1] == c.req[0]
+
+	secondPos := c.pw[c.max-1] == c.req[0]
+	// xor
+	if firstPos != secondPos {
+		return true
+	}
+
 	return false
 }
