@@ -16,7 +16,7 @@ func main() {
 }
 
 func sum(data []string) int {
-	// O(n^n) bad :(
+	// O(n^2) bad :(
 	for _, j := range data {
 		n, err := strconv.Atoi(j)
 		if err != nil {
