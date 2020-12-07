@@ -25,6 +25,22 @@ func main() {
 		Right 7, down 1.
 		Right 1, down 2.
 	*/
+	type tc struct {
+		right int
+		down  int
+	}
+	tcs := []tc{
+		{1, 1},
+		{3, 1},
+		{5, 1},
+		{7, 1},
+		{1, 2},
+	}
+	result := 1
+	for _, t := range tcs {
+		result *= countTrees(t.right, t.down, forest)
+	}
+	fmt.Println("Result: ", result)
 }
 
 const downBy = 1
