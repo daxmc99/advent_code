@@ -58,13 +58,34 @@ func findRow(s string) int {
 		} else if s[i] == 'B' {
 			min += d
 		} else {
-			panic("unexpected char at index")
+			panic("findRow: unexpected char at index")
 		}
 	}
-
-	return int(halve)
+	if min == max {
+		return int(min)
+	}
+	return -1
 }
 
 func findCol(s string) int {
-	return 0
+	min := 0.0
+	max := float64(MaxCol)
+	halve := 0.0
+
+	for i := range s {
+		halve = max - min
+		d := math.Round(halve / 2)
+
+		if s[i] == 'L' {
+			max -= d
+		} else if s[i] == 'R' {
+			min += d
+		} else {
+			panic("findCol: unexpected char at index")
+		}
+	}
+	if min == max {
+		return int(min)
+	}
+	return -1
 }
