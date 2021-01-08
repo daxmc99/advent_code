@@ -15,3 +15,20 @@ func TestFindCol(t *testing.T) {
 		t.Errorf("expected 5, got %d", got)
 	}
 }
+
+func TestMain(t *testing.T) {
+
+	seat := "FBFBBFFRLR"
+	gotRow, gotCol := findSeat(seat)
+	if gotRow != 44 {
+		t.Error("incorrect row")
+	}
+	if gotCol != 5 {
+		t.Error("incorrect column")
+	}
+	id := seatID(gotRow, gotCol)
+	if id != 357 {
+		t.Error("incorrect seat id")
+	}
+
+}

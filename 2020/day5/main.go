@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 	"strings"
 )
 
@@ -13,8 +14,8 @@ import (
 */
 
 const (
-	MaxRow = 127
-	MaxCol = 7
+	maxrow = 127
+	maxcol = 7
 )
 
 func seatID(row int, col int) int {
@@ -24,12 +25,41 @@ func seatID(row int, col int) int {
 func main() {
 	maxID := 0
 	seatList := strings.Split(input, "\n")
+
+	idList := make([]int, len(seatList))
 	for _, seat := range seatList {
 		r, c := findSeat(seat)
 		id := seatID(r, c)
+		if id == 0 {
+			continue
+		}
+		idList = append(idList, id)
 		if id > maxID {
 			maxID = id
 		}
+	}
+
+	sort.Ints(idList)
+	start := 0
+	for i := range idList {
+		if i == len(idList)-1 {
+			break //stop overruns
+		}
+		// set start to the value after the current bad entry
+		if idList[i] == idList[i+1] || idList[i] == 0 {
+			start = i + 1
+		}
+	}
+	cleanIDList := idList[start:]
+	count := cleanIDList[0]
+	for i := range cleanIDList {
+
+		if count != cleanIDList[i] {
+			fmt.Printf("next expected value was %d, but was actually %d\n", count, cleanIDList[i])
+			fmt.Printf("Missing id value is %d", count)
+			break
+		}
+		count++
 	}
 
 	fmt.Println("Max seat id is: ", maxID)
@@ -37,16 +67,16 @@ func main() {
 
 func findSeat(seat string) (row int, col int) {
 
-	row = findRow(seat[:8])
+	row = findRow(seat[:7])
 
-	col = findCol(seat[8:])
+	col = findCol(seat[7:])
 	return
 }
 
 func findRow(s string) int {
 
 	min := 0.0
-	max := float64(MaxRow)
+	max := float64(maxrow)
 	halve := 0.0
 	for i := range s {
 		// taking either upper or lower halve  of this range
@@ -69,7 +99,7 @@ func findRow(s string) int {
 
 func findCol(s string) int {
 	min := 0.0
-	max := float64(MaxCol)
+	max := float64(maxcol)
 	halve := 0.0
 
 	for i := range s {
